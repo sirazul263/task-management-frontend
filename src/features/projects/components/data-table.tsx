@@ -23,6 +23,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { RiAddCircleFill } from "react-icons/ri";
+import { useCreateProjectModal } from "../hooks/use-create-project-modal";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -51,9 +53,11 @@ export const DataTable = <TData, TValue>({
     },
   });
 
+  const { open } = useCreateProjectModal();
+
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter projects..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -62,6 +66,15 @@ export const DataTable = <TData, TValue>({
           }
           className="max-w-sm"
         />
+        <div
+          className="flex items-center justify-between cursor-pointer"
+          onClick={open}
+        >
+          <p className="text-xs uppercase font-bold text-neutral-500 ">
+            Add Project
+          </p>
+          <RiAddCircleFill className="size-5 text-neutral-500 cursor-pointer hover:opacity-75 transition" />
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

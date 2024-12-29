@@ -6,6 +6,7 @@ import { ProjectActions } from "./project-actions";
 import { Project } from "../types";
 import { UserAvatar } from "@/features/users/components/user-avatar";
 import { format } from "date-fns";
+import { ProjectAvatar } from "./project-avatar";
 
 export const columns: ColumnDef<Project>[] = [
   {
@@ -23,7 +24,18 @@ export const columns: ColumnDef<Project>[] = [
     },
     cell: ({ row }) => {
       const name = row.original.name;
-      return <p className="line-clamp-1">{name}</p>;
+      const image = row.original.image;
+      return (
+        <div className="flex items-center gap-x-2 ">
+          <ProjectAvatar
+            className="size-8"
+            fallbackClassName="text-sm"
+            name={name}
+            image={image || undefined}
+          />
+          <p className="line-clamp-1">{name}</p>
+        </div>
+      );
     },
   },
   {

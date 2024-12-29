@@ -32,7 +32,7 @@ export const ProjectActions = ({
 
   const { open } = useUpdateProjectModal();
 
-  //   const { mutate, isPending } = useDeleteTask();
+  // const { mutate, isPending } = useDeleteTask();
 
   const onDelete = async () => {
     const ok = await confirm();
@@ -47,11 +47,11 @@ export const ProjectActions = ({
   };
 
   const onOpenTask = () => {
-    router.push(`/tasks/${id}`);
+    router.push(`/projects/${id}`);
   };
 
   const onOpenProject = () => {
-    router.push(`/workspaces/projects/${projectId}`);
+    router.push(`/projects/${projectId}`);
   };
 
   return (
@@ -66,7 +66,7 @@ export const ProjectActions = ({
             onClick={onOpenTask}
           >
             <ExternalLinkIcon className="size-4 mr-2 stroke-2" />
-            Task Details
+            Project Details
           </DropdownMenuItem>
           <DropdownMenuItem
             className="font-medium p-[10px]"
