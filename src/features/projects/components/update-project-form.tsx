@@ -14,38 +14,36 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useRef, useState } from "react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import Image from "next/image";
-import { AlertTriangle, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useCreateProject } from "../api/use-create-project";
-import { uploadImage } from "@/hooks/upload-image";
-import { useCreateProjectModal } from "../hooks/use-create-project-modal";
-import { useRouter } from "next/navigation";
+import { Project } from "../types";
 import { createProjectSchema } from "../schemas";
+import Image from "next/image";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { AlertTriangle, ImageIcon } from "lucide-react";
+import { useRef, useState } from "react";
+import { useUpdateProject } from "../api/use-update-project";
+import { uploadImage } from "@/hooks/upload-image";
 
-interface CreateProjectFormPros {
-  onCancel?: () => void;
+interface UpdateProjectFormPros {
+  onClose: () => void;
+  initialValues: Project;
 }
 
-export const CreateProjectForm = ({ onCancel }: CreateProjectFormPros) => {
-  const router = useRouter();
-
-  const { mutateAsync, isPending } = useCreateProject();
-  const { close } = useCreateProjectModal();
+export const UpdateProjectForm = ({
+  onClose,
+  initialValues,
+}: UpdateProjectFormPros) => {
+  const { mutateAsync, isPending } = useUpdateProject();
 
   const [error, setError] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
-
   const form = useForm<z.infer<typeof createProjectSchema>>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
-      name: "",
-      key: "",
-      image: "",
+      ...initialValues,
+      image: initialValues.image ?? "",
     },
   });
 
@@ -62,12 +60,12 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormPros) => {
     const finalValues = {
       ...values,
       image: image || "",
+      id: initialValues.id,
     };
     try {
       setError(null);
       const res = await mutateAsync(finalValues);
-      router.refresh();
-      close();
+      onClose();
     } catch (error: any) {
       setError(error.message);
     }
@@ -79,12 +77,11 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormPros) => {
       form.setValue("image", file);
     }
   };
+
   return (
     <Card className="w-full h-full  border-none shadow-none">
-      <CardHeader className="flex pb-3 pt-0 px-7">
-        <CardTitle className="text-xl font-bold">
-          Create a new project
-        </CardTitle>
+      <CardHeader className="flex  p-7">
+        <CardTitle className="text-xl font-bold">Update Project</CardTitle>
       </CardHeader>
       <div className="px-7 ">
         <DottedSeparator />
@@ -217,9 +214,9 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormPros) => {
                 type="button"
                 size="lg"
                 variant="secondary"
-                onClick={onCancel}
+                onClick={onClose}
                 disabled={isPending}
-                className={cn(!onCancel && "invisible")}
+                className={cn(!onClose && "invisible")}
               >
                 Cancel
               </Button>
@@ -227,7 +224,7 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormPros) => {
                 {isPending || uploading ? (
                   <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></span>
                 ) : (
-                  "Create Project"
+                  "Update Project"
                 )}
               </Button>
             </div>

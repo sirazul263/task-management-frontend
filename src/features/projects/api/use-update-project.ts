@@ -4,6 +4,7 @@ import axios from "axios";
 import { getErrorMessage, getMessage } from "@/lib/utils";
 
 interface ProjectPayload {
+  id: number;
   name: string;
   key: string;
   image: string | File;
@@ -14,12 +15,12 @@ interface ResponseType {
   message: string;
   data: any;
 }
-export const useCreateProject = () => {
+export const useUpdateProject = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, ProjectPayload>({
     mutationFn: async (payload) => {
-      const response = await axios.post("/api/projects", payload);
+      const response = await axios.put("/api/projects", payload);
       if (response.status !== 200 || response.data.status !== 1) {
         throw new Error(
           response.status !== 200
@@ -30,11 +31,11 @@ export const useCreateProject = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      toast.success("Project created Successfully!");
+      toast.success("Project updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["projects"] });
     },
     onError: (error: any) => {
-      toast.error("Failed to create project");
+      toast.error("Failed to update project");
     },
   });
 

@@ -8,9 +8,17 @@ const pathnameMap = {
     title: "My Tasks",
     description: "View all of your tasks",
   },
+  create: {
+    title: "Create Task",
+    description: "Create a new task",
+  },
   project: {
     title: "My Projects",
     description: "View tasks  of your projects",
+  },
+  members: {
+    title: "All Members",
+    description: "All the members of your project",
   },
 };
 
@@ -22,7 +30,10 @@ const defaultMap = {
 const Navbar = () => {
   const pathname = usePathname();
   const pathnameParts = pathname.split("/");
-  const pathnameKey = pathnameParts[3] as keyof typeof pathnameMap;
+  const pathnameKey =
+    pathname.split("/").length === 2
+      ? (pathnameParts[1] as keyof typeof pathnameMap)
+      : (pathnameParts[2] as keyof typeof pathnameMap);
   const { title, description } = pathnameMap[pathnameKey] || defaultMap;
   return (
     <nav className="pt-4 px-6 flex justify-between items-center">

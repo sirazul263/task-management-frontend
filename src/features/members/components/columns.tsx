@@ -1,14 +1,19 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, MoreVertical } from "lucide-react";
-import { ProjectActions } from "./project-actions";
-import { Project } from "../types";
+import {
+  ArrowUpDown,
+  CheckCircle,
+  ShieldIcon,
+  UserIcon,
+  XCircle,
+} from "lucide-react";
 import { format } from "date-fns";
-import { ProjectAvatar } from "./project-avatar";
 import { UserAvatar } from "@/features/members/components/user-avatar";
+import { User } from "../types";
+import { snakeCaseToTitleCase } from "@/lib/utils";
 
-export const columns: ColumnDef<Project>[] = [
+export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -18,48 +23,47 @@ export const columns: ColumnDef<Project>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="px-0"
         >
-          Project Name
+          Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
       const name = row.original.name;
-      const image = row.original.image;
       return (
         <div className="flex items-center gap-x-2 ">
-          <ProjectAvatar
-            className="size-8"
+          <UserAvatar
+            className="size-6"
             fallbackClassName="text-sm"
             name={name}
-            image={image || undefined}
           />
           <p className="line-clamp-1">{name}</p>
         </div>
       );
     },
   },
+
   {
-    accessorKey: "key",
+    accessorKey: "email",
     header: ({ column }) => {
       return (
         <Button
-          className="px-0"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="px-0"
         >
-          Project Key
+          Email
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
-      const key = row.original.key;
-      return <p className="line-clamp-1">{key}</p>;
+      const email = row.original.email;
+      return <p className="line-champ-1">{email}</p>;
     },
   },
   {
-    accessorKey: "user.name",
+    accessorKey: "role",
     header: ({ column }) => {
       return (
         <Button
@@ -67,21 +71,51 @@ export const columns: ColumnDef<Project>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="px-0"
         >
-          Created By
+          Role
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
-      const user = row.original.user;
+      const role = row.original.role;
       return (
-        <div className="flex items-center gap-x-2 text-sm font-medium">
-          <UserAvatar
-            className="size-6"
-            fallbackClassName="text-sm"
-            name={user.name}
-          />
-          <p className="line-champ-1">{user.name}</p>
+        <div className="flex items-center">
+          {role === "ADMIN" ? (
+            <ShieldIcon className="size-5 mr-2" />
+          ) : (
+            <UserIcon className="size-5 mr-2" />
+          )}
+
+          <p className="line-champ-1 font-bold">{snakeCaseToTitleCase(role)}</p>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="px-0"
+        >
+          Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const status = row.original.status;
+      return (
+        <div className="flex items-center">
+          {status === "ACTIVE" ? (
+            <CheckCircle color="green" className="size-4 mr-2" />
+          ) : (
+            <XCircle color="red" className="size-4 mr-2" />
+          )}
+
+          <p className="line-champ-1 ">{snakeCaseToTitleCase(status)}</p>
         </div>
       );
     },
@@ -110,16 +144,16 @@ export const columns: ColumnDef<Project>[] = [
     },
   },
 
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      return (
-        <ProjectActions data={row.original}>
-          <Button variant="ghost" className="size-8 p-0">
-            <MoreVertical className="size-4" />
-          </Button>
-        </ProjectActions>
-      );
-    },
-  },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => {
+  //     return (
+  //       <ProjectActions data={row.original}>
+  //         <Button variant="ghost" className="size-8 p-0">
+  //           <MoreVertical className="size-4" />
+  //         </Button>
+  //       </ProjectActions>
+  //     );
+  //   },
+  // },
 ];

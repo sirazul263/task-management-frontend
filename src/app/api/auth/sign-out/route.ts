@@ -5,17 +5,15 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   try {
     const api = process.env.API_URL;
-    const requestBody = await request.json();
     const cookieStore = cookies();
     const token = cookieStore.get("authToken")?.value;
     // Fetch data from the external API
-    const response = await fetch(`${api}/projects/create`, {
+    const response = await fetch(`${api}/logout`, {
       method: "POST",
-      body: JSON.stringify(requestBody),
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`, // Use the token from the request body
         // Include any headers required by the external API
       },
     });

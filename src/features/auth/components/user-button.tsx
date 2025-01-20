@@ -8,21 +8,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DottedSeparator } from "@/components/dotted-separator";
-// import { useLogout } from "../api/use-logout";
 import { getCurrent } from "../queries";
 import { useEffect, useState } from "react";
+import { useLogout } from "../api/use-logout";
 
 export const UserButton = () => {
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => {
-    setIsClient(true); // Ensure this runs only on the client
-  }, []);
-
-  if (!isClient) return null;
-
   const user = getCurrent();
 
-  //   const { mutate: logout } = useLogout();
+  const { mutate: logout } = useLogout();
 
   if (!user) {
     return null;
@@ -34,6 +27,12 @@ export const UserButton = () => {
     ? name.charAt(0).toUpperCase()
     : email.charAt(0).toUpperCase() ?? "U";
 
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true); // Ensure this runs only on the client
+  }, []);
+
+  if (!isClient) return null;
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger className="outline-none relative">
@@ -64,7 +63,7 @@ export const UserButton = () => {
         </div>
         <DottedSeparator className="mb-1" />
         <DropdownMenuItem
-          //   onClick={() => logout()}
+          onClick={() => logout()}
           className="h-10 flex items-center justify-center text-amber-700 font-medium cursor-pointer"
         >
           <LogOut className="size-4 mr-2" />

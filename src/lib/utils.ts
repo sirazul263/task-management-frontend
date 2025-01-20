@@ -54,3 +54,10 @@ export const getMessage = (res: unknown): string | undefined => {
     return "An unknown error occurred";
   }
 };
+
+export function snakeCaseToTitleCase(str: string) {
+  return str
+    .toLowerCase()
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
